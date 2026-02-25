@@ -1,0 +1,7 @@
+#ifndef VIX_FFI_CONFIG_H
+#define VIX_FFI_CONFIG_H
+
+#define VIX_FFI_ABI_VERSION_MAJOR 1
+#define VIX_FFI_ABI_VERSION_MINOR 0
+
+#endif

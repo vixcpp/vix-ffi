@@ -1,0 +1,55 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "dev-ninja",
+      "displayName": "dev-ninja",
+      "description": "Debug build with Ninja",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "VIX_FFI_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "rel-ninja",
+      "displayName": "rel-ninja",
+      "description": "Release build with Ninja",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-ninja-rel",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "VIX_FFI_BUILD_TESTS": "OFF"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dev-ninja",
+      "configurePreset": "dev-ninja",
+      "jobs": 0
+    },
+    {
+      "name": "rel-ninja",
+      "configurePreset": "rel-ninja",
+      "jobs": 0
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "dev-ninja",
+      "configurePreset": "dev-ninja",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}
