@@ -1,0 +1,24 @@
+{
+  "name": "vix_ffi",
+  "namespace": "vixcpp",
+  "version": "0.1.0",
+  "type": "header-only",
+  "include": "include",
+  "license": "MIT",
+  "description": "Stable C ABI infrastructure and binding toolkit for Vix Registry libraries (FFI v1).",
+  "keywords": [
+    "cpp",
+    "ffi",
+    "abi",
+    "ctypes",
+    "cmake",
+    "vix"
+  ],
+  "repository": "https://github.com/vixcpp/vix-ffi",
+  "authors": [
+    {
+      "name": "Vix.cpp contributors",
+      "github": "vixcpp"
+    }
+  ]
+}
