@@ -42,3 +42,5 @@
 cmd.md
 .vscode/
 .git/
+build-ninja/
+build/
