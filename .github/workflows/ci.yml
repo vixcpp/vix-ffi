@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, dev]
+  pull_request:
+    branches: [main, master, dev]
+
+jobs:
+  build-and-test:
+    name: Build and Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        build_type: [Debug, Release]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v4
+
+      - name: Configure (root)
+        run: >
+          cmake
+          -S .
+          -B build
+          -G Ninja
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DVIX_FFI_BUILD_TESTS=ON
+
+      - name: Build (root)
+        run: cmake --build build --config ${{ matrix.build_type }}
+
+      - name: Run tests (root)
+        run: ctest --test-dir build --output-on-failure
+
+      - name: ABI Check (C and C++)
+        run: python3 tools/abi_check.py --root .
+
+      - name: Build example (base64_ffi)
+        run: >
+          cmake
+          -S examples/base64_ffi
+          -B build-base64-ffi
+          -G Ninja
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build example target
+        run: cmake --build build-base64-ffi --config ${{ matrix.build_type }}
+
+      - name: Python smoke test
+        run: |
+          export PYTHONPATH="$PWD/examples/base64_ffi/python:$PYTHONPATH"
+          export VIX_LIB_PATH="$PWD/build-base64-ffi"
+          python3 - << 'EOF'
+          from base64 import api
+          assert isinstance(api.version(), str)
+          s = api.encode(b"hello")
+          assert api.decode(s) == b"hello"
+          print("Python FFI smoke test passed")
+          EOF
+
+  windows-build:
+    name: Build (Windows)
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v4
+
+      - name: Configure
+        run: >
+          cmake
+          -S .
+          -B build
+          -G Ninja
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DVIX_FFI_BUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build build --config ${{ matrix.build_type }}
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: ABI Check
+        run: python tools/abi_check.py --root .
+
+      - name: Build example (base64_ffi)
+        run: >
+          cmake
+          -S examples/base64_ffi
+          -B build-base64-ffi
+          -G Ninja
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build example target
+        run: cmake --build build-base64-ffi --config ${{ matrix.build_type }}
+
+      - name: Python smoke test
+        run: |
+          set PYTHONPATH=%CD%\examples\base64_ffi\python;%PYTHONPATH%
+          set VIX_LIB_PATH=%CD%\build-base64-ffi
+          python - << EOF
+          from base64 import api
+          assert isinstance(api.version(), str)
+          s = api.encode(b"hello")
+          assert api.decode(s) == b"hello"
+          print("Python FFI smoke test passed")
+          EOF

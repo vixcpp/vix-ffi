@@ -1,0 +1,16 @@
+{
+  "ffi": {
+    "enabled": true,
+    "abi_version": "1.0",
+    "header": "ffi/include/__pkg__/__pkg___ffi.h",
+    "library": {
+      "name": "__pkg__",
+      "output": "__pkg__"
+    }
+  },
+  "python": {
+    "enabled": true,
+    "package": "__pkg__",
+    "wrapper_dir": "ffi/python/__pkg__"
+  }
+}

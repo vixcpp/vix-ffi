@@ -1,0 +1,54 @@
+{
+  "library": {
+    "name": "base64",
+    "env_var": "VIX_LIB_PATH",
+    "search_paths": []
+  },
+  "symbol_prefix": "base64_",
+  "functions": [
+    {
+      "name": "encode",
+      "symbol": "base64_encode",
+      "restype": "int",
+      "args": [
+        {
+          "name": "in_ptr",
+          "type": "u8_ptr"
+        },
+        {
+          "name": "in_len",
+          "type": "size_t"
+        },
+        {
+          "name": "out_ptr",
+          "type": "u8_ptr"
+        },
+        {
+          "name": "out_cap",
+          "type": "size_t"
+        },
+        {
+          "name": "out_len",
+          "type": "size_t"
+        },
+        {
+          "name": "st",
+          "type": "vix_status_ptr"
+        }
+      ]
+    }
+  ],
+  "python": {
+    "package": "base64",
+    "exports": [
+      "api"
+    ],
+    "api": [
+      {
+        "name": "encode",
+        "calls": "encode",
+        "kind": "bytes_to_str"
+      }
+    ]
+  }
+}
